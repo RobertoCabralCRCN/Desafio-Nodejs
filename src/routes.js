@@ -58,20 +58,18 @@ export const routes = [
 
             Object.assign(tasksFinded, {title, description, updated_at: new Date()})
 
-            console.log(tasksFinded)
-
             database.update('tasks', id, tasksFinded)
             return res.writeHead(201).end('Update Completed!')
         }
     },
-    // {
-    //     method: 'DELETE',
-    //     path: buildRoutePath('/users/:id'),
-    //     handler: (req, res) => {
-    //         const { id } = req.params
+    {
+        method: 'DELETE',
+        path: buildRoutePath('/tasks/:id'),
+        handler: (req, res) => {
+            const { id } = req.params
 
-    //         database.delete('users', id)
-    //         return res.writeHead(204).end()
-    //     }
-    // },
+            database.delete('tasks', id)
+            return res.writeHead(201).end('Delete')
+        }
+    },
 ]
