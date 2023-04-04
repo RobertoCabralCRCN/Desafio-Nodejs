@@ -56,7 +56,9 @@ export const routes = [
                 return res.writeHead(404).end()
             }
 
-            Object.assign(tasksFinded, {title, description, updated_at: new Date()})
+            Object.assign(tasksFinded, {title: title ? title : tasksFinded.title,
+                 description: description ? description : tasksFinded.description,
+                  updated_at: new Date()})
 
             database.update('tasks', id, tasksFinded)
             return res.writeHead(201).end('Update Completed!')
@@ -68,8 +70,38 @@ export const routes = [
         handler: (req, res) => {
             const { id } = req.params
 
+            const tasksFinded = database.select('tasks', {
+                id
+            })[0]
+            
+            if (!tasksFinded){
+                return res.writeHead(404).end()
+            }
+
             database.delete('tasks', id)
             return res.writeHead(201).end('Delete')
+        }
+    },
+    {
+        method: 'PATCH',
+        path: buildRoutePath('/tasks/:id/complete'),
+        handler: (req, res) => {
+            const { id } = req.params
+            
+
+            const tasksFinded = database.select('tasks', {
+                id
+            })[0]
+            
+            if (!tasksFinded){
+                return res.writeHead(404).end()
+            }
+        
+        
+            Object.assign(tasksFinded, {completead_at: tasksFinded.completead_at ? null : new Date()})
+
+            database.update('tasks', id, tasksFinded)
+            return res.writeHead(204).end()
         }
     },
 ]
